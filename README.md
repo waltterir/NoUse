@@ -67,7 +67,7 @@ llama3.1-8b  + Nouse memory  →      96%     60
 
 **An 8B model with Nouse outperforms a 70B model without it.**
 
-The effect is not retrieval. It is *epistemic grounding* — a small, precise knowledge signal
+The effect is not retrieval. It is _epistemic grounding_ — a small, precise knowledge signal
 redirects the model's existing priors onto the correct frame, with confidence and evidence attached.
 We call this the **Intent Disambiguation Effect**.
 
@@ -77,19 +77,19 @@ We call this the **Intent Disambiguation Effect**.
 
 ## What You Get
 
-| Capability | What it does |
-| --- | --- |
-| Structured memory | Stores typed relations between concepts instead of plain text chunks |
-| Confidence-aware retrieval | Returns what is known, with evidence and uncertainty attached |
-| Gap awareness | Surfaces where knowledge ends instead of bluffing through it |
-| Continuous learning | Strengthens or weakens graph paths over time via Hebbian plasticity |
-| Local-first runtime | Runs as a local graph and daemon, then injects context into any LLM |
+| Capability                 | What it does                                                         |
+| -------------------------- | -------------------------------------------------------------------- |
+| Structured memory          | Stores typed relations between concepts instead of plain text chunks |
+| Confidence-aware retrieval | Returns what is known, with evidence and uncertainty attached        |
+| Gap awareness              | Surfaces where knowledge ends instead of bluffing through it         |
+| Continuous learning        | Strengthens or weakens graph paths over time via Hebbian plasticity  |
+| Local-first runtime        | Runs as a local graph and daemon, then injects context into any LLM  |
 
 ---
 
 ## What Nouse Is
 
-Nouse (νοῦς, Gk. *mind*) is a **persistent, self-growing epistemic substrate** that attaches to any LLM.
+Nouse (νοῦς, Gk. _mind_) is a **persistent, self-growing epistemic substrate** that attaches to any LLM.
 
 It is informed by brain-inspired plasticity, cognitive research, and the practical failure modes of LLM memory.
 
@@ -107,7 +107,7 @@ Your documents, conversations, research
       — what is NOT known (gap map from TDA)
 ```
 
-It is **not** a RAG system. RAG retrieves chunks. Nouse extracts *relations* — typed, weighted,
+It is **not** a RAG system. RAG retrieves chunks. Nouse extracts _relations_ — typed, weighted,
 evidence-scored connections between concepts — and injects a compact, structured context block.
 
 It is **not** just a memory system. Memory stores and retrieves. Nouse maintains an epistemic
@@ -122,14 +122,14 @@ There is no retraining. No gradient descent. The graph grows — and the gaps be
 
 ## How Nouse Differs From Alternatives
 
-| System | Main unit | Knows confidence | Knows what's missing | Learns over time | Local-first |
-| --- | --- | :---: | :---: | :---: | :---: |
-| **Basic RAG** | text chunk | ✗ | ✗ | ✗ | ✓ |
-| **Vector memory** | embedding | ~ | ✗ | ✗ | ✓ |
-| **Mem0** | memory objects | ~ | ✗ | ~ | ✓ |
-| **MemGPT / Letta** | conversation pages | ✗ | ✗ | ~ | ✗ |
-| **Claude Memory** | key-value | ✗ | ✗ | ✗ | ✗ |
-| **Nouse** | typed relation + evidence | **✓** | **✓** | **✓** | **✓** |
+| System             | Main unit                 | Knows confidence | Knows what's missing | Learns over time | Local-first |
+| ------------------ | ------------------------- | :--------------: | :------------------: | :--------------: | :---------: |
+| **Basic RAG**      | text chunk                |        ✗         |          ✗           |        ✗         |      ✓      |
+| **Vector memory**  | embedding                 |        ~         |          ✗           |        ✗         |      ✓      |
+| **Mem0**           | memory objects            |        ~         |          ✗           |        ~         |      ✓      |
+| **MemGPT / Letta** | conversation pages        |        ✗         |          ✗           |        ~         |      ✗      |
+| **Claude Memory**  | key-value                 |        ✗         |          ✗           |        ✗         |      ✗      |
+| **Nouse**          | typed relation + evidence |      **✓**       |        **✓**         |      **✓**       |    **✓**    |
 
 Nouse is not trying to replace the model. It gives the model a brain-like memory substrate it can query before speaking.
 
@@ -168,7 +168,7 @@ response = openai.chat(messages=[
 ])
 ```
 
-## Use With OpenAI, Anthropic, Or Ollama
+## Use With OpenAI, Anthropic, Ollama, or Groq
 
 ### OpenAI
 
@@ -237,6 +237,28 @@ response = ollama.chat(
 )
 
 print(response["message"]["content"])
+```
+
+### Groq
+
+```python
+from groq import Groq
+import nouse
+
+client = Groq()
+brain = nouse.attach()
+
+question = "What does this project know about Hebbian learning?"
+context = brain.query(question).context_block()
+
+response = client.chat.completions.create(
+    model="llama3-8b-8192",
+    messages=[
+        {"role": "system", "content": context},
+        {"role": "user", "content": question},
+    ],
+)
+print(response.choices[0].message.content)
 ```
 
 The pattern is always the same: `brain.query(...)` first, provider call second.
@@ -393,15 +415,15 @@ Requires Python 3.11+. Graph stored in `~/.local/share/nouse/`.
 
 ## Roadmap
 
-| Phase | Status | Description |
-| --- | :---: | --- |
-| **Core engine** | ✅ | SQLite WAL + NetworkX + Hebbian plasticity + TDA gap detection |
-| **Multi-provider** | ✅ | OpenAI, Anthropic, Ollama, Groq, Cerebras |
-| **MCP integration** | ✅ | Model Context Protocol server for Claude and compatible clients |
-| **Cross-domain benchmarks** | 🔄 | Validating on external datasets beyond internal domain |
-| **Docker support** | 📋 | One-command deployment for teams |
-| **Managed cloud** | 📋 | `nouse.attach(api_key="nouse_sk_...")` — hosted brain for teams |
-| **Multi-tenant API** | 📋 | Shared project memory, team collaboration, SLAs |
+| Phase                       | Status | Description                                                     |
+| --------------------------- | :----: | --------------------------------------------------------------- |
+| **Core engine**             |   ✅   | SQLite WAL + NetworkX + Hebbian plasticity + TDA gap detection  |
+| **Multi-provider**          |   ✅   | OpenAI, Anthropic, Ollama, Groq, Cerebras                       |
+| **MCP integration**         |   ✅   | Model Context Protocol server for Claude and compatible clients |
+| **Cross-domain benchmarks** |   🔄   | Validating on external datasets beyond internal domain          |
+| **Docker support**          |   📋   | One-command deployment for teams                                |
+| **Managed cloud**           |   📋   | `nouse.attach(api_key="nouse_sk_...")` — hosted brain for teams |
+| **Multi-tenant API**        |   📋   | Shared project memory, team collaboration, SLAs                 |
 
 ---
 
